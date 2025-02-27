@@ -36,6 +36,7 @@ export class Circle {
       const collisionResult = this.collider.isCollision();
       if (!collisionResult.isZero()) {
         this.speed = MathHelpers.reflect(this.speed, collisionResult);
+        this.handleMove();
       }
     }
   }

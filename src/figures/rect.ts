@@ -19,8 +19,8 @@ export class Rect {
 
   public update() {
     this.handleRigidbody();
-    this.handleCollider();
     this.handleMove();
+    this.handleCollider();
   }
 
   public draw(context: CanvasRenderingContext2D) {
@@ -38,7 +38,8 @@ export class Rect {
     if (this.collider) {
       const collisionResult = this.collider.isCollision();
       if (!collisionResult.isZero()) {
-        this.speed = MathHelpers.reflect(this.speed, collisionResult)
+        this.speed = MathHelpers.reflect(this.speed, collisionResult);
+        this.handleMove();
       }
     }
   }

@@ -40,7 +40,7 @@ export class Game {
   }
 
   private initializeValues() {
-    GameState.figures = TestValues.box();
+    GameState.figures = TestValues.far();
   }
 
   private initializeModules() {
