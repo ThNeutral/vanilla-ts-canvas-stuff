@@ -39,8 +39,8 @@ export class Game {
     requestAnimationFrame(this.handleNextFrame);
   }
 
-  private initializeValues() {    
-    GameState.figures = TestValues.circles();
+  private initializeValues() {
+    GameState.figures = TestValues.box();
   }
 
   private initializeModules() {

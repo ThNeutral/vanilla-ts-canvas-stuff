@@ -3,7 +3,7 @@ import { Rigidbody } from "../components/Rigidbody";
 import { Camera } from "../modules/Camera";
 import { Time } from "../modules/Time";
 import { Color } from "../utils/Color";
-import { MathHelper as MathHelpers } from "../utils/MathHelpers";
+import { MathHelpers } from "../utils/MathHelpers";
 import { Vector2 } from "../utils/Vector2";
 
 export class Circle {

@@ -60,4 +60,28 @@ export class TestValues {
 
     return [big, small];
   }
+
+  public static circleRect() {
+    const circle = new Circle(new Vector2(100, 100), 25, getRandomColor());
+    circle.rb = new Rigidbody();
+    circle.collider = new CircleCollider(circle);
+    circle.speed = new Vector2(40, 0);
+
+    const rect = new Rect(new Vector2(300, 300), new Vector2(50, 50), getRandomColor());
+    rect.collider = new RectCollider(rect);
+
+    return [rect, circle];  
+  }
+
+  public static rectCircle() {
+    const rect = new Rect(new Vector2(100, 100), new Vector2(25, 25), getRandomColor());
+    rect.rb = new Rigidbody();
+    rect.collider = new RectCollider(rect);
+    rect.speed = new Vector2(40, 0);
+
+    const circle = new Circle(new Vector2(300, 300), 50, getRandomColor());
+    circle.collider = new CircleCollider(circle);
+
+    return [circle, rect];  
+  }
 }

@@ -79,10 +79,20 @@ export class RectCollider extends Collider {
       return Vector2.zero()
     }
 
-    return Vector2.zero();
+    return new Bounds(this.belongs).center.subtract(other.center);
   }
 
   private isRectCircleCollision(other: Circle) {
-    return false
+    let test = new Vector2(other.center.x, other.center.y);
+
+    if (other.center.x < this.belongs.origin.x) test.x = this.belongs.origin.x;
+    else if (other.center.x > this.belongs.origin.x + this.belongs.size.x) test.x = this.belongs.origin.x + this.belongs.size.x;
+    
+    if (other.center.y < this.belongs.origin.y) test.y = this.belongs.origin.y;
+    else if (other.center.y > this.belongs.origin.y + this.belongs.size.y) test.y = this.belongs.origin.y + this.belongs.size.y;
+    
+    const distance = other.center.subtract(test).magnitude();
+
+    return distance <= other.radius;
   }
 }

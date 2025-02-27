@@ -4,6 +4,7 @@ import { Vector2 } from "../utils/Vector2";
 import { Time } from "../modules/Time";
 import { RectCollider } from "../components/RectCollider";
 import { Camera } from "../modules/Camera";
+import { MathHelpers } from "../utils/MathHelpers";
 
 export class Rect {
   public speed = Vector2.zero();
@@ -37,15 +38,7 @@ export class Rect {
     if (this.collider) {
       const collisionResult = this.collider.isCollision();
       if (!collisionResult.isZero()) {
-        if (collisionResult.equals(Vector2.up())) {
-          this.speed = new Vector2(this.speed.x, -Math.abs(this.speed.y * 0.8));
-        } else if (collisionResult.equals(Vector2.down())) {
-          this.speed = new Vector2(this.speed.x, Math.abs(this.speed.y * 0.8));
-        } else if (collisionResult.equals(Vector2.left())) {
-          this.speed = new Vector2(Math.abs(this.speed.x * 0.8), this.speed.y);
-        } else if (collisionResult.equals(Vector2.right())) {
-          this.speed = new Vector2(-Math.abs(this.speed.x * 0.8), this.speed.y);
-        }
+        this.speed = MathHelpers.reflect(this.speed, collisionResult)
       }
     }
   }

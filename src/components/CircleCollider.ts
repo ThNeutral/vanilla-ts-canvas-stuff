@@ -1,5 +1,5 @@
 import { Circle } from "../figures/Circle";
-import { Rect } from "../figures/Rect";
+import { Bounds, Rect } from "../figures/Rect";
 import { GameState } from "../game/Game";
 import { Vector2 } from "../utils/Vector2";
 import { Collider, CollisionDirection } from "./CollidersCommon";
@@ -30,7 +30,25 @@ export class CircleCollider extends Collider {
   }
 
   private handleCircleRectCollision(other: Rect) {
-    return Vector2.zero();
+    if (!this.isCircleRectCollision(other)) {
+      return Vector2.zero();
+    }
+    
+    return this.belongs.center.subtract(new Bounds(other).center);
+  }
+
+  private isCircleRectCollision(other: Rect) {
+    let test = new Vector2(this.belongs.center.x, this.belongs.center.y);
+
+    if (this.belongs.center.x < other.origin.x) test.x = other.origin.x;
+    else if (this.belongs.center.x > other.origin.x + other.size.x) test.x = other.origin.x + other.size.x;
+    
+    if (this.belongs.center.y < other.origin.y) test.y = other.origin.y;
+    else if (this.belongs.center.y > other.origin.y + other.size.y) test.y = other.origin.y + other.size.y;
+    
+    const distance = this.belongs.center.subtract(test).magnitude();
+
+    return distance <= this.belongs.radius;
   }
 
   private handleCircleCircleCollision(other: Circle) {
