@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://thneutral.github.io/web-doom-at-home/",
+  "homepage": "https://thneutral.github.io/abat/",
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",

@@ -5,19 +5,19 @@ import { getRandomColor } from "../utils/utils";
 import { Vector2 } from "../utils/vector2";
 import { Time } from "../modules/time";
 import { Camera } from "../modules/camera";
+import { RectCollider } from "../components/colliders";
 
 export class GameConfig {
   constructor(public targetFPS: number) {}
 }
 
-class GameState {
-    public figures: Rect[] = [];
-    public input = new Input();
+export class GameState {
+    public static figures: Rect[] = [];
+    public static input = new Input();
 }
 
 export class Game {
   private context: CanvasRenderingContext2D;
-  private gameState: GameState;
 
   constructor(
     private gameConfig: GameConfig,
@@ -29,7 +29,6 @@ export class Game {
     }
 
     this.context = context;
-    this.gameState = new GameState();
 
     this.handleNextFrame = this.handleNextFrame.bind(this);
   }
@@ -41,11 +40,25 @@ export class Game {
   }
 
   private initializeValues() {
-    const obj = new Rect(new Vector2(100, 100), new Vector2(50, 50), getRandomColor());
-    obj.rb = new Rigidbody();
-    obj.rb.useGravity = false;
-    obj.speed = new Vector2(0, 0);
-    this.gameState.figures = [obj];
+    const object = new Rect(new Vector2(200, 200), new Vector2(50, 50), getRandomColor());
+    object.rb = new Rigidbody();
+    object.rb.useGravity = true;
+    object.collider = new RectCollider(object);
+    object.speed = new Vector2(1000, -1000);
+
+    const wallBottom = new Rect(new Vector2(50, 500), new Vector2(500, 50), getRandomColor());
+    wallBottom.collider = new RectCollider(wallBottom);
+
+    const wallTop = new Rect(new Vector2(50, 100), new Vector2(500, 50), getRandomColor());
+    wallTop.collider = new RectCollider(wallTop);
+    
+    const wallLeft = new Rect(new Vector2(25, 150), new Vector2(50, 350), getRandomColor());
+    wallLeft.collider = new RectCollider(wallLeft);
+    
+    const wallRight = new Rect(new Vector2(550, 150), new Vector2(50, 350), getRandomColor());
+    wallRight.collider = new RectCollider(wallRight);
+    
+    GameState.figures = [wallBottom, wallLeft, wallRight, wallTop, object];
   }
 
   private initializeModules() {
@@ -62,19 +75,19 @@ export class Game {
     Time.update(Time.frameOffsetToTime(offset))
     Camera.update();
 
-    for (const figure of this.gameState.figures) {
-      figure.updateSelf();
+    for (const figure of GameState.figures) {
+      figure.update();
     }
+
+    Input.update();
 
     this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
 
-    for (const figure of this.gameState.figures) {
+    for (const figure of GameState.figures) {
       this.context.fillStyle = figure.color.toColorString();
       const adjustedOrigin = figure.origin.add(Camera.offset)
       this.context.fillRect(adjustedOrigin.x, adjustedOrigin.y, figure.size.x, figure.size.y)  
     }
-
-    Input.update();
 
     requestAnimationFrame(this.handleNextFrame);
   }
