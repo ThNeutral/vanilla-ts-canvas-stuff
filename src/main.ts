@@ -1,5 +1,5 @@
 import "./style.css";
-import { Game, GameConfig } from "./game/game.ts";
+import { Game, GameConfig } from "./game/Game.ts";
 import { initializeCanvas } from "./utils/utils.ts";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `

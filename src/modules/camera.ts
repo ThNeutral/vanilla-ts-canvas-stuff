@@ -1,5 +1,5 @@
-import { Vector2 } from "../utils/vector2";
-import { Input } from "./input";
+import { Vector2 } from "../utils/Vector2";
+import { Input } from "./Input";
 
 export class Camera {
   private static _offset = Vector2.zero();

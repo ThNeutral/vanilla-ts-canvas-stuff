@@ -1,5 +1,5 @@
-import { Time } from "../modules/time";
-import { Vector2 } from "../utils/vector2";
+import { Time } from "../modules/Time";
+import { Vector2 } from "../utils/Vector2";
 
 export class Rigidbody {
   public static gravityAcceleration = 10;

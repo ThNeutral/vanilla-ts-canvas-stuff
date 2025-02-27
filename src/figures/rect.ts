@@ -1,11 +1,11 @@
-import { Color } from "../utils/color";
-import { Rigidbody } from "../components/rigidbody";
-import { Vector2 } from "../utils/vector2";
-import { Time } from "../modules/time";
-import { RectCollider } from "../components/colliders";
-import { IFigure } from "./IFigure";
+import { Color } from "../utils/Color";
+import { Rigidbody } from "../components/Rigidbody";
+import { Vector2 } from "../utils/Vector2";
+import { Time } from "../modules/Time";
+import { RectCollider } from "../components/RectCollider";
+import { Camera } from "../modules/Camera";
 
-export class Rect implements IFigure {
+export class Rect {
   public speed = Vector2.zero();
   public rb: Rigidbody | null = null;
   public collider: RectCollider | null = null;
@@ -17,44 +17,34 @@ export class Rect implements IFigure {
   ) {}
 
   public update() {
-    this.handleCollider();
     this.handleRigidbody();
+    this.handleCollider();
     this.handleMove();
+  }
+
+  public draw(context: CanvasRenderingContext2D) {
+    context.fillStyle = this.color.toColorString();
+    const adjustedOrigin = this.origin.add(Camera.offset);
+    context.fillRect(
+      adjustedOrigin.x,
+      adjustedOrigin.y,
+      this.size.x,
+      this.size.y
+    );
   }
 
   private handleCollider() {
     if (this.collider) {
       const collisionResult = this.collider.isCollision();
-      if (collisionResult) {
-        switch (collisionResult) {
-          case "top": {
-            this.speed = new Vector2(
-              this.speed.x,
-              -Math.abs(this.speed.y * 0.8)
-            );
-            break;
-          }
-          case "bottom": {
-            this.speed = new Vector2(
-              this.speed.x,
-              Math.abs(this.speed.y * 0.8)
-            );
-            break;
-          }
-          case "left": {
-            this.speed = new Vector2(
-              Math.abs(this.speed.x * 0.8),
-              this.speed.y
-            );
-            break;
-          }
-          case "right": {
-            this.speed = new Vector2(
-              -Math.abs(this.speed.x * 0.8),
-              this.speed.y
-            );
-            break;
-          }
+      if (!collisionResult.isZero()) {
+        if (collisionResult.equals(Vector2.up())) {
+          this.speed = new Vector2(this.speed.x, -Math.abs(this.speed.y * 0.8));
+        } else if (collisionResult.equals(Vector2.down())) {
+          this.speed = new Vector2(this.speed.x, Math.abs(this.speed.y * 0.8));
+        } else if (collisionResult.equals(Vector2.left())) {
+          this.speed = new Vector2(Math.abs(this.speed.x * 0.8), this.speed.y);
+        } else if (collisionResult.equals(Vector2.right())) {
+          this.speed = new Vector2(-Math.abs(this.speed.x * 0.8), this.speed.y);
         }
       }
     }
