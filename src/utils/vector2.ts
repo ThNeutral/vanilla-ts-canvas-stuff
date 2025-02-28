@@ -18,6 +18,10 @@ export class Vector2 {
     return new Vector2(0, -1);
   }
 
+  public static copy(v: Vector2) {
+    return new Vector2(v.x, v.y);
+  }
+
   constructor(public x: number, public y: number) {}
 
   public add(v: Vector2): Vector2 {

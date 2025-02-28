@@ -5,8 +5,8 @@ import { Camera } from "../modules/Camera";
 import { Circle } from "../figures/Circle";
 import { TestValues } from "./TestValues";
 
-export class GameConfig {
-  constructor(public targetFPS: number) {}
+export interface GameConfig {
+  targetFPS: number;
 }
 
 type Figures = Rect | Circle
@@ -40,7 +40,7 @@ export class Game {
   }
 
   private initializeValues() {
-    GameState.figures = TestValues.far();
+    GameState.figures = TestValues.aroundScreen();
   }
 
   private initializeModules() {

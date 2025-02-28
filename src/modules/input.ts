@@ -10,6 +10,9 @@ export class Input {
   public static get mouseMove() {
     return Input._mouseMove;
   }
+  public static get mousePosition() {
+    return Input.previousMousePosition.add(Input._mouseMove);
+  }
 
   public static get(key: string | number) {
     return !!Input.pressed[key];

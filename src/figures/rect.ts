@@ -17,6 +17,22 @@ export class Rect {
     public color: Color
   ) {}
 
+  public addRigidbody(useGravity = true) {
+    this.rb = new Rigidbody();
+    this.rb.useGravity = useGravity;
+    return this;
+  }
+  
+  public addCollider() {
+    this.collider = new RectCollider(this);
+    return this;
+  }
+
+  public addSpeed(sp: Vector2) {
+    this.speed = sp;
+    return this;
+  }
+
   public update() {
     this.handleRigidbody();
     this.handleMove();
@@ -46,10 +62,7 @@ export class Rect {
 
   private handleRigidbody() {
     if (this.rb) {
-      const newSpeed = this.rb.handleGravity(this.speed);
-      if (newSpeed) {
-        this.speed = newSpeed;
-      }
+      this.speed = this.rb.handleGravity(this.speed);
     }
   }
 
@@ -59,13 +72,16 @@ export class Rect {
 }
 
 export class Bounds {
-  public center: Vector2;
-  public extents: Vector2;
-  constructor(rect: Rect) {
-    this.extents = new Vector2(rect.size.x / 2, rect.size.y / 2);
-    this.center = new Vector2(
-      rect.origin.x + this.extents.x,
-      rect.origin.y + this.extents.y
-    );
+  public static fromRect(rect: Rect) {
+    return Bounds.fromOriginSize(rect.origin, rect.size);
   }
+
+  public static fromOriginSize(origin: Vector2, size: Vector2) {
+    const extents = new Vector2(size.x / 2, size.y / 2);
+    const center = new Vector2(origin.x + extents.x, origin.y + extents.y);
+
+    return new Bounds(center, extents);
+  }
+
+  constructor(public center: Vector2, public extents: Vector2) {}
 }

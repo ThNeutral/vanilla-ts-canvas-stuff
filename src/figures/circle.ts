@@ -17,6 +17,22 @@ export class Circle {
     public color: Color
   ) {}
 
+  public addRigidbody(useGravity = true) {
+    this.rb = new Rigidbody();
+    this.rb.useGravity = useGravity;
+    return this;
+  }
+  
+  public addCollider() {
+    this.collider = new CircleCollider(this);
+    return this;
+  }
+
+  public addSpeed(sp: Vector2) {
+    this.speed = sp;
+    return this;
+  }
+
   public update() {
     this.handleRigidbody();
     this.handleCollider();
@@ -27,7 +43,13 @@ export class Circle {
     context.fillStyle = this.color.toColorString();
     const adjustedCenter = this.center.add(Camera.offset);
     context.beginPath();
-    context.arc(adjustedCenter.x, adjustedCenter.y, this.radius, 0, 2 * Math.PI);
+    context.arc(
+      adjustedCenter.x,
+      adjustedCenter.y,
+      this.radius,
+      0,
+      2 * Math.PI
+    );
     context.fill();
   }
 
@@ -43,13 +65,10 @@ export class Circle {
 
   private handleRigidbody() {
     if (this.rb) {
-      const newSpeed = this.rb.handleGravity(this.speed);
-      if (newSpeed) {
-        this.speed = newSpeed;
-      }
+      this.speed = this.rb.handleGravity(this.speed);
     }
   }
-  
+
   private handleMove() {
     this.center = this.center.add(this.speed.multiplyScalar(Time.deltaTime));
   }

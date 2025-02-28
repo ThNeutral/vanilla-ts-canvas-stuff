@@ -1,6 +1,6 @@
 import "./style.css";
 import { Game, GameConfig } from "./game/Game.ts";
-import { initializeCanvas } from "./utils/utils.ts";
+import { initializeCanvas } from "./utils/Utils.ts";
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     <canvas id="canvas" />
@@ -9,7 +9,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 initializeCanvas(canvas);
 
-const config: GameConfig = new GameConfig(60);
+const config: GameConfig = { targetFPS: 60 };
 
 const game = new Game(config, canvas);
 game.startGame();
