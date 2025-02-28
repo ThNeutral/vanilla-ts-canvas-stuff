@@ -92,4 +92,11 @@ export class Vector2 {
   public isZero() {
     return this.x == 0 && this.y == 0;
   }
+
+  public rotate(rads: number) {
+    const degrees = rads * Math.PI / 180;
+    const x = this.x * Math.cos(degrees) - this.y * Math.sin(degrees);
+    const y = this.x * Math.sin(degrees) + this.y * Math.cos(degrees);
+    return new Vector2(x, y);
+  }
 }

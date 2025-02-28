@@ -31,24 +31,38 @@ export class CircleCollider extends Collider {
   }
 
   private handleCircleRectCollision(other: Rect) {
-    if (!CollisionHelpers.isRectCircleCollision(other, this.belongs)) {
+    if (
+      !CollisionHelpers.isRectCircleCollision(
+        other,
+        this.belongs,
+        this.standardPrediction
+      )
+    ) {
       return Vector2.zero();
     }
 
     return CollisionHelpers.calculateCircleRectCollisionNormal(
       this.belongs,
       other,
+      this.standardPrediction
     );
   }
 
   private handleCircleCircleCollision(other: Circle) {
-    if (!CollisionHelpers.isCircleCircleCollision(this.belongs, other)) {
+    if (
+      !CollisionHelpers.isCircleCircleCollision(
+        this.belongs,
+        other,
+        this.standardPrediction
+      )
+    ) {
       return Vector2.zero();
     }
 
     return CollisionHelpers.calculateCircleCircleCollisionNormal(
       this.belongs,
-      other
+      other,
+      this.standardPrediction
     );
   }
 }

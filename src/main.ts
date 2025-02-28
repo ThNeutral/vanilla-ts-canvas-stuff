@@ -9,7 +9,7 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 const canvas = document.querySelector<HTMLCanvasElement>("canvas")!;
 initializeCanvas(canvas);
 
-const config: GameConfig = { targetFPS: 60 };
+const config: GameConfig = {};
 
 const game = new Game(config, canvas);
 game.startGame();

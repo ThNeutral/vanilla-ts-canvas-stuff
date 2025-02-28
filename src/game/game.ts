@@ -5,15 +5,13 @@ import { Camera } from "../modules/Camera";
 import { Circle } from "../figures/Circle";
 import { TestValues } from "./TestValues";
 
-export interface GameConfig {
-  targetFPS: number;
-}
+export interface GameConfig {}
 
-type Figures = Rect | Circle
+type Figures = Rect | Circle;
 
 export class GameState {
-    public static figures: Figures[] = [];
-    public static input = new Input();
+  public static figures: Figures[] = [];
+  public static input = new Input();
 }
 
 export class Game {
@@ -45,16 +43,13 @@ export class Game {
 
   private initializeModules() {
     Input.initializeListeners();
-    Time.initialize(Date.now(), this.gameConfig.targetFPS);
+    Time.initialize(Date.now());
   }
 
   private handleNextFrame(offset: number) {
-    if (!Time.isNextFrame(Time.frameOffsetToTime(offset))) {
-      requestAnimationFrame(this.handleNextFrame);
-      return;
-    }
+    const time = Time.frameOffsetToTime(offset);
 
-    Time.update(Time.frameOffsetToTime(offset))
+    Time.update(time);
     Camera.update();
 
     for (const figure of GameState.figures) {
@@ -63,10 +58,10 @@ export class Game {
 
     Input.update();
 
-    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     for (const figure of GameState.figures) {
-      figure.draw(this.context); 
+      figure.draw(this.context);
     }
 
     requestAnimationFrame(this.handleNextFrame);
