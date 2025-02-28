@@ -4,8 +4,11 @@ import { Time } from "../modules/Time";
 import { Camera } from "../modules/Camera";
 import { Circle } from "../figures/Circle";
 import { TestValues } from "./TestValues";
+import { timeout } from "../utils/Utils";
 
-export interface GameConfig {}
+export interface GameConfig {
+  targetFPS: number;
+}
 
 type Figures = Rect | Circle;
 
@@ -31,10 +34,13 @@ export class Game {
     this.handleNextFrame = this.handleNextFrame.bind(this);
   }
 
-  public startGame() {
+  public async startGame() {
     this.initializeValues();
     this.initializeModules();
-    requestAnimationFrame(this.handleNextFrame);
+    while (true) {
+      this.handleNextFrame();
+      await timeout(Time.getTimeUntilNextFrame());
+    }
   }
 
   private initializeValues() {
@@ -43,11 +49,11 @@ export class Game {
 
   private initializeModules() {
     Input.initializeListeners();
-    Time.initialize(Date.now());
+    Time.initialize(Date.now(), this.gameConfig.targetFPS);
   }
 
-  private handleNextFrame(offset: number) {
-    const time = Time.frameOffsetToTime(offset);
+  private handleNextFrame() {
+    const time = Date.now();
 
     Time.update(time);
     Camera.update();
@@ -63,7 +69,5 @@ export class Game {
     for (const figure of GameState.figures) {
       figure.draw(this.context);
     }
-
-    requestAnimationFrame(this.handleNextFrame);
   }
 }

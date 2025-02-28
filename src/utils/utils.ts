@@ -5,3 +5,7 @@ export function initializeCanvas(canvas: HTMLCanvasElement) {
   //   await canvas.requestPointerLock();
   // });
 }
+
+export async function timeout(time: number) {
+  await new Promise((res) => setTimeout(res, time));
+}
