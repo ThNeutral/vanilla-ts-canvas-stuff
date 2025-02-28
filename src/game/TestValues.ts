@@ -25,10 +25,17 @@ export class TestValues {
     );
 
     const launcher = new Launcher(
-      new Vector2((window.innerWidth - 50) / 2, (window.innerHeight - 50) / 2),
+      new Vector2((window.innerWidth - 500) / 2, (window.innerHeight - 50) / 2),
       new Vector2(50, 50)
-    );
+    ).addSpreadAngle(5);
 
-    return [left, right, top, bottom, launcher];
+    const target = new Launcher(
+      new Vector2((window.innerWidth + 500) / 2, (window.innerHeight - 50) / 2),
+      new Vector2(50, 50)
+    )
+      .disablePlayerControls()
+      .addSpreadAngle(10);
+
+    return [left, right, top, bottom, launcher, target];
   }
 }

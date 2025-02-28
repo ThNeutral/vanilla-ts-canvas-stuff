@@ -13,14 +13,17 @@ export interface GameConfig {
 export type Figure = Rect | Circle;
 
 export class GameState {
-  public static figures: Figure[] = [];
   public static input = new Input();
+  private static _figures: Figure[] = [];
+  public static get figures() {
+    return this._figures;
+  }
   public static addFigures(...args: Figure[]) {
-    this.figures.push(...args);
+    this._figures.push(...args);
   }
   public static deleteFigure(id: string) {
-    const newFigures = this.figures.filter((f) => f.id !== id); 
-    this.figures = newFigures;
+    const newFigures = this._figures.filter((f) => f.id !== id); 
+    this._figures = newFigures;
   }
 }
 
@@ -51,7 +54,7 @@ export class Game {
   }
 
   private initializeValues() {
-    GameState.figures = TestValues.aroundScreen();
+    GameState.addFigures(...TestValues.aroundScreen());
   }
 
   private initializeModules() {
