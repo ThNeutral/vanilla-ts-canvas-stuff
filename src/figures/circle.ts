@@ -1,12 +1,15 @@
 import { CircleCollider } from "../components/CircleCollider";
+import { CollisionCallback } from "../components/CollidersCommon";
 import { Rigidbody } from "../components/Rigidbody";
 import { Camera } from "../modules/Camera";
 import { Time } from "../modules/Time";
 import { Color } from "../utils/Color";
 import { MathHelpers } from "../utils/MathHelpers";
 import { Vector2 } from "../utils/Vector2";
+import * as uuid from "uuid";
 
 export class Circle {
+  public readonly id: string;
   public rb: Rigidbody | null = null;
   public collider: CircleCollider | null = null;
   public speed = Vector2.zero();
@@ -15,16 +18,19 @@ export class Circle {
     public center: Vector2,
     public radius: number,
     public color: Color
-  ) {}
+  ) {
+    this.id = uuid.v4();
+  }
 
   public addRigidbody(useGravity = true) {
     this.rb = new Rigidbody();
     this.rb.useGravity = useGravity;
     return this;
   }
-  
-  public addCollider() {
+
+  public addCollider(callback: CollisionCallback | null = null) {
     this.collider = new CircleCollider(this);
+    this.collider.callback = callback;
     return this;
   }
 
@@ -56,9 +62,12 @@ export class Circle {
   private handleCollider() {
     if (this.collider) {
       const collisionResult = this.collider.isCollision();
-      if (!collisionResult.isZero()) {
-        this.speed = MathHelpers.reflect(this.speed, collisionResult);
-        this.handleMove();
+      if (this.collider.callback && collisionResult.target) {
+        const ignoreCollision = this.collider.callback(collisionResult.target);
+        if (!ignoreCollision) {
+          this.speed = MathHelpers.reflect(this.speed, collisionResult.result);
+          this.handleMove();
+        }
       }
     }
   }

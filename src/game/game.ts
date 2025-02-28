@@ -10,11 +10,18 @@ export interface GameConfig {
   targetFPS: number;
 }
 
-type Figures = Rect | Circle;
+export type Figure = Rect | Circle;
 
 export class GameState {
-  public static figures: Figures[] = [];
+  public static figures: Figure[] = [];
   public static input = new Input();
+  public static addFigures(...args: Figure[]) {
+    this.figures.push(...args);
+  }
+  public static deleteFigure(id: string) {
+    const newFigures = this.figures.filter((f) => f.id !== id); 
+    this.figures = newFigures;
+  }
 }
 
 export class Game {

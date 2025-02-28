@@ -10,8 +10,9 @@ export class RectCollider extends Collider {
     super("rect");
   }
 
-  public isCollision(): Vector2 {
+  public isCollision() {
     let result = Vector2.zero();
+    let target: Circle | Rect | null = null;
 
     for (const figure of GameState.figures) {
       if (figure === this.belongs) continue;
@@ -19,15 +20,17 @@ export class RectCollider extends Collider {
       if (figure.collider) {
         if (figure.collider.type === "rect") {
           result = this.handleRectRectCollision(figure as Rect);
-          if (!result.isZero()) break;
         } else if (figure.collider.type === "circle") {
           result = this.handleRectCircleCollision(figure as Circle);
-          if (!result.isZero()) break;
         }
+        if (!result.isZero()) {
+          target = figure;
+          break;
+        };
       }
     }
 
-    return result;
+    return { result, target };
   }
 
   private handleRectRectCollision(other: Rect): Vector2 {

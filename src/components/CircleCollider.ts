@@ -1,6 +1,6 @@
 import { Circle } from "../figures/Circle";
-import { Bounds, Rect } from "../figures/Rect";
-import { GameState } from "../game/Game";
+import { Rect } from "../figures/Rect";
+import { Figure, GameState } from "../game/Game";
 import { CollisionHelpers } from "../utils/CollisionHelpers";
 import { Vector2 } from "../utils/Vector2";
 import { Collider } from "./CollidersCommon";
@@ -10,8 +10,9 @@ export class CircleCollider extends Collider {
     super("circle");
   }
 
-  public isCollision(): Vector2 {
+  public isCollision() {
     let result = Vector2.zero();
+    let target: Figure | null = null;
 
     for (const figure of GameState.figures) {
       if (figure === this.belongs) continue;
@@ -19,15 +20,17 @@ export class CircleCollider extends Collider {
       if (figure.collider) {
         if (figure.collider.type === "rect") {
           result = this.handleCircleRectCollision(figure as Rect);
-          if (!result.isZero()) break;
         } else if (figure.collider.type === "circle") {
           result = this.handleCircleCircleCollision(figure as Circle);
-          if (!result.isZero()) break;
         }
+        if (!result.isZero()) {
+          target = figure;
+          break;
+        };
       }
     }
 
-    return result;
+    return { result, target };
   }
 
   private handleCircleRectCollision(other: Rect) {

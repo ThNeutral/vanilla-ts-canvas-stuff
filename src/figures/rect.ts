@@ -5,8 +5,11 @@ import { Time } from "../modules/Time";
 import { RectCollider } from "../components/RectCollider";
 import { Camera } from "../modules/Camera";
 import { MathHelpers } from "../utils/MathHelpers";
+import * as uuid from "uuid";
+import { CollisionCallback } from "../components/CollidersCommon";
 
 export class Rect {
+  public readonly id: string;
   public speed = Vector2.zero();
   public rb: Rigidbody | null = null;
   public collider: RectCollider | null = null;
@@ -15,16 +18,19 @@ export class Rect {
     public origin: Vector2,
     public size: Vector2,
     public color: Color
-  ) {}
+  ) {
+    this.id = uuid.v4();
+  }
 
   public addRigidbody(useGravity = true) {
     this.rb = new Rigidbody();
     this.rb.useGravity = useGravity;
     return this;
   }
-  
-  public addCollider() {
+
+  public addCollider(callback: CollisionCallback | null = null) {
     this.collider = new RectCollider(this);
+    this.collider.callback = callback;
     return this;
   }
 
@@ -53,9 +59,12 @@ export class Rect {
   private handleCollider() {
     if (this.collider) {
       const collisionResult = this.collider.isCollision();
-      if (!collisionResult.isZero()) {
-        this.speed = MathHelpers.reflect(this.speed, collisionResult);
-        this.handleMove();
+      if (this.collider.callback && collisionResult.target) {
+        const ignoreCollision = this.collider.callback(collisionResult.target);
+        if (!ignoreCollision) {
+          this.speed = MathHelpers.reflect(this.speed, collisionResult.result);
+          this.handleMove();
+        }
       }
     }
   }
