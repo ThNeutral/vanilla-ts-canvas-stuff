@@ -8,14 +8,23 @@ export class Time {
   private static lastFrameTime: number = 0;
   private static targetFPS: number = 0;
 
+  public static timeScale = 1;
+
   public static initialize(startTime: number, targetFPS: number) {
     Time.startTime = startTime;
     Time.lastFrameTime = startTime;
     Time.targetFPS = targetFPS;
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.timeScale = 0;
+      } else {
+        this.timeScale = 1;
+      }
+    })
   }
 
   public static update(lastFrameTime: number) {
-    Time._deltaTime = (lastFrameTime - Time.lastFrameTime) / 1000;
+    Time._deltaTime = this.timeScale * (lastFrameTime - Time.lastFrameTime) / 1000;
     document.getElementsByTagName('title')[0].innerText = (1 / Time._deltaTime).toFixed(2);  
     Time.lastFrameTime = lastFrameTime;
   }

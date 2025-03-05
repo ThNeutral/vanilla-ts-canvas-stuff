@@ -1,9 +1,10 @@
 import { Vector2 } from "../utils/Vector2";
 import { Wall } from "../objects/Wall";
-import { Launcher } from "../objects/Launcher";
+import { Player } from "../objects/Player";
+import { Enemy } from "../objects/Enemy";
 
 export class TestValues {
-  public static aroundScreen() {
+  private static getWallsAroundScreen() {
     const left = new Wall(
       new Vector2(-25, 0),
       new Vector2(50, window.innerHeight)
@@ -24,18 +25,32 @@ export class TestValues {
       new Vector2(window.innerWidth - 50, 50)
     );
 
-    const launcher = new Launcher(
+    return [left, right, top, bottom];
+  }
+
+  public static bulletBox() {
+    const player = new Player(
+      new Vector2(window.innerWidth / 2, window.innerHeight / 2),
+      new Vector2(50, 50)
+    )
+      .addSpreadAngle(180)
+      .addDestroyProjectileOnCollision(false)
+      .addShootSpeed(0.01);
+
+    return [...this.getWallsAroundScreen(), player];
+  }
+
+  public static playerAndEnemy() {
+    const player = new Player(
       new Vector2((window.innerWidth - 500) / 2, (window.innerHeight - 50) / 2),
       new Vector2(50, 50)
     ).addSpreadAngle(5);
 
-    const target = new Launcher(
+    const enemy = new Enemy(
       new Vector2((window.innerWidth + 500) / 2, (window.innerHeight - 50) / 2),
       new Vector2(50, 50)
-    )
-      .disablePlayerControls()
-      .addSpreadAngle(10);
+    ).addSpreadAngle(10);
 
-    return [left, right, top, bottom, launcher, target];
+    return [...this.getWallsAroundScreen(), player, enemy];
   }
 }

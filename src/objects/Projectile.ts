@@ -2,7 +2,7 @@ import { Circle } from "../figures/Circle";
 import { Figure, GameState } from "../game/Game";
 import { Color } from "../utils/Color";
 import { Vector2 } from "../utils/Vector2";
-import { Launcher } from "./Launcher";
+import { Shooter } from "./Shooter";
 
 export class Projectile extends Circle {
   private readonly damage = 1;
@@ -11,6 +11,7 @@ export class Projectile extends Circle {
     center: Vector2,
     radius: number,
     speed: Vector2,
+    private destroyOnCollision = true,
     color: Color = Color.getRandomColor()
   ) {
     super(center, radius, color);
@@ -18,8 +19,10 @@ export class Projectile extends Circle {
   }
 
   private handleCollision(target: Figure) {
-    if (target instanceof Projectile) return true;
-    if (target instanceof Launcher) target.receiveDamage(this.damage);
-    GameState.deleteFigure(this.id);
+    if (this.destroyOnCollision) {
+      if (target instanceof Projectile) return true;
+      if (target instanceof Shooter) target.receiveDamage(this.damage);
+      GameState.deleteFigure(this.id);
+    } 
   }
 }

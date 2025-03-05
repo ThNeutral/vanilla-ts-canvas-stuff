@@ -54,7 +54,7 @@ export class Game {
   }
 
   private initializeValues() {
-    GameState.addFigures(...TestValues.aroundScreen());
+    GameState.addFigures(...TestValues.playerAndEnemy());
   }
 
   private initializeModules() {
